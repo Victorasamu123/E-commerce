@@ -1,5 +1,7 @@
 body{
-    background-image: url();
+    background-image: url(images/isometric-empty-shopping-basket-gadget_1262-16541.webp);
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 #signUpBtn{
     background-color: black;

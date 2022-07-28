@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,34 +9,99 @@
     <link rel="stylesheet" href="bootstrap-5.2.0-beta1-dist/css/bootstrap.css">
     <link rel="stylesheet" href="signup.css">
 </head>
+
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-6 mx-auto shadow p-5 bg-">
+            <div class="col-lg-6 mx-auto shadow p-5 bg- col-sm-12">
                 <h6><span></span></h6>
                 <h6 class="display-4 text-center text-dark">Sign Up</h6>
                 <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput"><img src="images/people.svg" alt="" width="30"> Full-Name</label>
-                  </div>
+                    <input type="text" class="form-control" id="floatingName" placeholder="Enter Name">
+                    <label for="floatingName"><img src="images/people.svg" alt="" width="30"> Full-Name</label>
+                </div>
                 <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput"><img src="images/call.svg" alt="" width="30"> Phone Number</label>
-                  </div>
+                    <input type="number" class="form-control" id="floatingNum" placeholder="+234">
+                    <label for="floatingNum"><img src="images/call.svg" alt="" width="30"> Phone Number</label>
+                </div>
                 <div class="form-floating mb-3">
                     <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                     <label for="floatingInput"><img src="images/mail-unread.svg" alt="" width="30">Email address</label>
-                  </div>
-                  <div class="form-floating">
+                </div>
+                <div class="form-floating">
                     <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
                     <label for="floatingPassword"><img src="images/lock-closed.svg" alt="" width="30">Password</label>
-                  </div>
+                </div>
                 <button class="btn  w-100 mt-3 text-light fs-3" id="signUpBtn">Signup</button>
                 <i>Do you have an account? <a href="signin.html">Sign In</a></i>
+                <button class="btn  w-100 mt-3 text-light fs-3" id="signUpG" style="background-color:black ;">Sign up Google</button>
 
                 <div id="allTodo"></div>
             </div>
         </div>
     </div>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword,GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxP_9z3E1eTGIcPx64RB2tgMrKm33a3js",
+            authDomain: "e-commerce-app-b0a1f.firebaseapp.com",
+            databaseURL: "https://e-commerce-app-b0a1f-default-rtdb.firebaseio.com",
+            projectId: "e-commerce-app-b0a1f",
+            storageBucket: "e-commerce-app-b0a1f.appspot.com",
+            messagingSenderId: "492892698719",
+            appId: "1:492892698719:web:ca2eaafe26d664894bc3ea"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const auth = getAuth();
+        const provider = new GoogleAuthProvider();
+
+        let userArray = [];
+        let user_id = 0;
+
+        let dbRef = ref(db, "users");
+        onValue(dbRef, function(snapshot){
+            userArray = snapshot.val();
+            if (userArray) {
+                user_id = userArray.length;
+            } else {
+                user_id = 0
+            }
+        })
+
+        document.getElementById("signUpBtn").addEventListener("click", function () {
+            createUserWithEmailAndPassword(auth, floatingInput.value, floatingPassword.value)
+                .then((credentials) => {
+                    let user = {
+                        full_name: floatingName.value,
+                        phone_no: floatingNum.value,
+                        email: floatingInput.value,
+                        uid: credentials.user.uid
+                    };
+                    let userRef = ref(db, `users/${user_id}`);
+                    set(userRef, user);
+                    window.location = "admin.html";
+                }).catch((error) => {
+                    alert(error.message);
+                })
+        })
+        document.getElementById("signUpG").addEventListener("click", function (){
+            signInWithPopup(auth, provider).then((credentials) => {
+                console.log(credentials);
+            }).catch((error) => {
+                console.log(error);
+            })
+        })
+    </script>
 </body>
+
 </html>

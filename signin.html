@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-6 mx-auto shadow p-5 bg-">
+            <div class="col-lg-6 mx-auto shadow p-5 bg- col-sm-12">
                 <h6><span></span></h6>
                 <h6 class="display-4 text-center text-dark">Sign In</h6>
                 <div class="form-floating mb-3">
@@ -22,12 +22,54 @@
                     <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
                     <label for="floatingPassword"><img src="images/lock-closed.svg" alt="" width="30">Password</label>
                   </div>
-                <button class="btn  w-100 mt-3 text-light fs-3" id="signUpBtn">Signin</button>
+                <button class="btn  w-100 mt-3 text-light fs-3" id="signInBtn" style="background-color:black ;">Signin</button>
                 <i>Do not  have an account with vmart? <a href="signup.html">Sign Up</a></i>
-
-                <div id="allTodo"></div>
+                <button class="btn  w-100 mt-3 text-light fs-3" id="signInG" style="background-color:black ;">Sign in Google</button>
             </div>
         </div>
     </div>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-database.js";
+        import { getAuth, signInWithEmailAndPassword,GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxP_9z3E1eTGIcPx64RB2tgMrKm33a3js",
+            authDomain: "e-commerce-app-b0a1f.firebaseapp.com",
+            databaseURL: "https://e-commerce-app-b0a1f-default-rtdb.firebaseio.com",
+            projectId: "e-commerce-app-b0a1f",
+            storageBucket: "e-commerce-app-b0a1f.appspot.com",
+            messagingSenderId: "492892698719",
+            appId: "1:492892698719:web:ca2eaafe26d664894bc3ea"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const auth = getAuth();
+        const provider = new GoogleAuthProvider();
+
+        document.getElementById("signInBtn").addEventListener("click", function () {
+            let email = floatingInput.value;
+            let password = floatingPassword.value;
+            signInWithEmailAndPassword(auth,email,password)
+            .then((credentials) => {
+                window.location = "admin.html";
+            }).catch((error) =>{
+                alert(error.message);
+            })
+        })
+        document.getElementById("signInG").addEventListener("click", function (){
+            signInWithPopup(auth, provider).then((credentials) => {
+                console.log(credentials);
+            }).catch((error) => {
+                console.log(error);
+            })
+        })
+    </script>
 </body>
 </html>
