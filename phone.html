@@ -65,8 +65,8 @@
                 </div>
             </div>
         </div>
-        <div class="third-half">
-            <div id="allTodo" class="mt-5 ms-5"></div>
+        <div class="third-half row ms-5 ">
+            <div id="allTodo" class="mt-5 ms-5 col-lg-12 col-sm-12"></div>
             <div id="loader"></div>
         </div>
     </section>
@@ -167,7 +167,7 @@
                 let imgRef = stRef(storage, `images/${productObj.img_name}`);
                 getDownloadURL(imgRef).then((url) => {
                     allTodo.innerHTML += `
-                    <div class="card shadow mb-2 p-2">
+                    <div class="card shadow mb-2 p-2 col-lg-12 col-sm-12">
                         <div class="row">
                             <div class="col-6">
                                 <span style="font-size: 20px;">${productObj.pro.productName}</span>
