@@ -31,34 +31,60 @@
     <section class="d-flex">
         <div class="first-half">
             <div class="product-container">
-             <p class="fs-3 ms-5 pt-3">Products</p>
-             <ul>
-                <a href=""><li class="mb-3"><img src="images/phone-portrait-outline.svg" alt="" width="20"> Phones </li></a>
-                <a href=""><li class="mb-3"><img src="images/desktop-outline.svg" alt="" width="20"> Computing</li></a>
-                <a href=""><li class="mb-3"><img src="images/tv-outline.svg" alt="" width="20"> Electronics</li></a>
-                <a href=""><li class="mb-3"><img src="images/car-sport-outline.svg" alt="" width="20"> Automobile</li></a>
-                <a href=""><li class="mb-3"><img src="images/glasses-outline.svg" alt="" width="20"> Fashion</li></a>
-                <a href=""><li class="mb-3"><img src="images/hardware-chip-outline.svg" alt="" width="20"> Gadgets</li></a>
-                <a href=""><li class="mb-3"><img src="images/game-controller-outline.svg" alt="" width="20"> Gaming</li></a>
-                <a href=""><li class="mb-3"><img src="images/american-football-outline.svg" alt="" width="20"> Sporting Goods</li></a>
-                <a href=""><li class="mb-3"><img src="images/accessibility-outline.svg" alt="" width="20"> Body products</li></a>
-                <a href=""><li class="mb-3"><img src="images/ticket-outline.svg" alt="" width="20"> Other Categories</li></a>
-             </ul>
+                <p class="fs-3 ms-5 pt-3">Products</p>
+                <ul>
+                    <a href="phone.html">
+                        <li class="mb-3"><img src="images/phone-portrait-outline.svg" alt="" width="20"> Phones </li>
+                    </a>
+                    <a href="">
+                        <li class="mb-3"><img src="images/desktop-outline.svg" alt="" width="20"> Computing</li>
+                    </a>
+                    <a href="">
+                        <li class="mb-3"><img src="images/tv-outline.svg" alt="" width="20"> Electronics</li>
+                    </a>
+                    <a href="">
+                        <li class="mb-3"><img src="images/car-sport-outline.svg" alt="" width="20"> Automobile</li>
+                    </a>
+                    <a href="">
+                        <li class="mb-3"><img src="images/glasses-outline.svg" alt="" width="20"> Fashion</li>
+                    </a>
+                    <a href="">
+                        <li class="mb-3"><img src="images/hardware-chip-outline.svg" alt="" width="20"> Gadgets</li>
+                    </a>
+                    <a href="">
+                        <li class="mb-3"><img src="images/game-controller-outline.svg" alt="" width="20"> Gaming</li>
+                    </a>
+                    <a href="">
+                        <li class="mb-3"><img src="images/american-football-outline.svg" alt="" width="20"> Sporting
+                            Goods</li>
+                    </a>
+                    <a href="">
+                        <li class="mb-3"><img src="images/accessibility-outline.svg" alt="" width="20"> Body products
+                        </li>
+                    </a>
+                    <a href="">
+                        <li class="mb-3"><img src="images/ticket-outline.svg" alt="" width="20"> Other Categories</li>
+                    </a>
+                </ul>
             </div>
         </div>
         <div class="second-half">
-            
-                <div class="row mt-5">
-                    <div class="col-12 mx-auto shadow p-5">
-                        <input type="text" placeholder="product name" class="form-control" id="todoInp">
-                        <input type="text" placeholder="product price" class="form-control" id="todoProduct">
-                        <input type="text" placeholder="price discount" class="form-control" id="todoPrice">
-                        <input type="file" id="fileInput" class="form-control">
-                        <button class="btn btn-info w-100 mt-3" id="todoBtn">Add products</button>
-                        <div id="loading"></div>
-                    </div>
+
+            <div class="row mt-5">
+                <div class="col-12 mx-auto shadow p-5">
+                    <input type="text" placeholder="product name" class="form-control" id="todoInp">
+                    <input type="text" placeholder="product price" class="form-control" id="todoProduct">
+                    <input type="text" placeholder="price discount" class="form-control" id="discountPrice">
+                    <input type="file" id="fileInput" class="form-control">
+                    <button class="btn btn-info w-100 mt-3" id="todoBtn">Add products</button>
+                    <div id="loading"></div>
                 </div>
             </div>
+        </div>
+        </div>
+        <div>
+            <div id="allTodo"></div>
+            <div id="loader"></div>
         </div>
     </section>
     <script src="bootstrap-5.2.0-beta1-dist/js/bootstrap.js"></script>
@@ -67,7 +93,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-database.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js";
-        import { getStorage, uploadBytes, ref as stRef, uploadBytesResumable,getDownloadURL } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-storage.js";
+        import { getStorage, uploadBytes, ref as stRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-storage.js";
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -89,14 +115,97 @@
         const storage = getStorage()
 
         let userDetails = {}
-        onAuthStateChanged(auth, (user) =>{
-          if(user){
-            userDetails.email = user.email;
-            userDetails.uid= user.uid;
-          }else{
-            window.location="sign in.html"
-          }
-          console.log(userDetails)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userDetails.email = user.email;
+                userDetails.uid = user.uid;
+            } else {
+                window.location = "signin.html"
+            }
+            console.log(userDetails)
+        })
+        let dbRef = ref(db, "products");
+        let productArray = [];
+        let productId = 0;
+        onValue(dbRef, function (snapshot) {
+            productArray = snapshot.val();
+            if (productArray) {
+                productId = productArray.length;
+                displayTodo(productArray);
+            } else {
+                todoId = 0;
+            }
+        })
+
+
+
+
+        document.getElementById("todoBtn").addEventListener("click", function () {
+            let todo = {
+
+            };
+            let files = fileInp.files[0];
+            let fileName = files.name;
+
+            console.log(files, fileName);
+            let date = new Date();
+            let productObj = { todo, time: date.toLocaleTimeString(), email: userDetails.email, img_name: fileName };
+            let productRef = ref(db, `products/${productId}`);
+            set(productRef, productObj);
+
+            let imgRef = stRef(storage, `images/${fileName}`);
+            let uploadImage = uploadBytesResumable(imgRef, files);
+            uploadImage.on("state-changed", function (snapshot) {
+                let totalBytes = snapshot.totalBytes;
+                let bytesTransferred = snapshot.bytesTransferred;
+                console.log(totalBytes, bytesTransferred);
+
+                let progress = Math.round((bytesTransferred / totalBytes) * 100);
+                console.log(`${progress}%`);
+                loader.innerHTML = `${progress}%`;
+            }, function (error) {
+                console.log(error);
+            }, function () {
+                loader.innerHTML = "Uploaded!";
+                loader.classList.add("bg-success");
+            })
+
+
+        })
+
+        function displayTodo(productArray) {
+            let userProduct = productArray.filter((each) => each.email == userDetails.email);
+            console.log(userProduct);
+            let todoHTML = "";
+            userProduct.map((todo, i) => {
+                console.log(todo.img_name);
+                let imgRef = stRef(storage, `images/${todo.img_name}`);
+                getDownloadURL(imgRef).then((url) => {
+                    allTodo.innerHTML += `
+                    <div class="card shadow mb-2 p-2">
+                        <div class="row">
+                            <div class="col-6">
+                                <span style="font-size: 20px;">${todo.todo}</span>
+                                <i class="text-muted" style="font-size: 10px;">${todo.time}</i>
+                            </div>
+                            <div class="col-6">
+                                <img src="${url}" style="width: 100px; height: 100px; border-radius: 100%;">
+                            </div>
+                        <div>
+                    </div>`
+                    console.log(url)
+                })
+            })
+            console.log(todoHTML, "jddjdjdjj");
+            // allTodo.innerHTML = todoHTML;
+        }
+
+        document.getElementById("sign-out").addEventListener("click", function () {
+            signOut(auth).then((response) => {
+                window.location = "index.html";
+            }).catch((error) => {
+                console.log(response);
+            })
         })
     </script>
 </body>
