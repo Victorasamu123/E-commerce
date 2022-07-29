@@ -167,15 +167,16 @@
                 let imgRef = stRef(storage, `images/${productObj.img_name}`);
                 getDownloadURL(imgRef).then((url) => {
                     allTodo.innerHTML += `
-                    <div class="card shadow mb-2 p-2 col-lg-12 col-sm-12">
+                    <div class="card shadow mb-2 p-2 col-lg-12 col-sm-12" style="width: 18rem;">
+                        <div>
+                                <img src="${url}" class="card-img-top">
+                            </div>
                         <div class="row">
                             <div class="col-6">
                                 <span style="font-size: 20px;">${productObj.pro.productName}</span>
                                 <i class="text-muted" style="font-size: 10px;">${productObj.pro.productPrice}</i>
                             </div>
-                            <div class="col-6">
-                                <img src="${url}" style="width: 100px; height: 100px; border-radius: 100%;">
-                            </div>
+                            
                         <div>
                     </div>`
                     console.log(url)
