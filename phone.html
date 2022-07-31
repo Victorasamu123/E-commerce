@@ -34,7 +34,7 @@
              <p class="fs-3 ms-5 pt-3">Products</p>
              <ul>
                 <a href="phone.html"><li class="mb-3"><img src="images/phone-portrait-outline.svg" alt="" width="20"> Phones </li></a>
-                <a href=""><li class="mb-3"><img src="images/desktop-outline.svg" alt="" width="20"> Computing</li></a>
+                <a href="comp.html"><li class="mb-3"><img src="images/desktop-outline.svg" alt="" width="20"> Computing</li></a>
                 <a href=""><li class="mb-3"><img src="images/tv-outline.svg" alt="" width="20"> Electronics</li></a>
                 <a href=""><li class="mb-3"><img src="images/car-sport-outline.svg" alt="" width="20"> Automobile</li></a>
                 <a href=""><li class="mb-3"><img src="images/glasses-outline.svg" alt="" width="20"> Fashion</li></a>
@@ -65,8 +65,8 @@
                 </div>
             </div>
         </div>
-        <div class="third-half row ms-5">
-            <div id="allTodo" class="mt-5 ms-5"></div>
+        <div class="third-half row ms-5 ">
+            <div id="allTodo" class="mt-5 ms-5 col-lg-12 col-sm-12"></div>
             <div id="loader"></div>
         </div>
     </section>
@@ -167,17 +167,15 @@
                 let imgRef = stRef(storage, `images/${productObj.img_name}`);
                 getDownloadURL(imgRef).then((url) => {
                     allTodo.innerHTML += `
-                    <div class="card shadow mb-2 p-2 col-lg-6 col-sm-12" style="width: 18rem;">
+                    <div class="card shadow mb-2 p-2 col-lg-12 col-sm-12" style="width: 18rem;">
                         <div class="col-12">
                                 <img src="${url}" class="card-img-top">
                             </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <span style="font-size: 20px;">${productObj.pro.productName}</span>
-                                <i class="text-muted" style="font-size: 10px;">${productObj.pro.productPrice}</i>
-                            </div>
+                            <div class="card-body">
+                            <h5 class="card-title">${productObj.pro.productName}</h5>
+                            <p class="card-text">${productObj.pro.productPrice}</p>
+                            <p class="card-text text-danger">${productObj.pro.productDiscount}</p>
                             
-                        <div>
                     </div>`
                     console.log(url)
                 })
