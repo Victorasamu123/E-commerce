@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <header class="position-sticky">
+    <header class="sticky-top">
         <nav class="nav">
             <div class="ps-5 pt-2">
                 <span id="text-logo" class="fs-1 ms-5">Vmart</span><span class="ms-3"><img
@@ -65,8 +65,8 @@
                 </div>
             </div>
         </div>
-        <div class="third-half row ms-5 ">
-            <div id="allTodo" class="mt-5 ms-5 col-lg-12 col-sm-12"></div>
+        <div class="third-half row ms-5">
+            <div id="allTodo" class="mt-5 ms-5"></div>
             <div id="loader"></div>
         </div>
     </section>
@@ -167,8 +167,8 @@
                 let imgRef = stRef(storage, `images/${productObj.img_name}`);
                 getDownloadURL(imgRef).then((url) => {
                     allTodo.innerHTML += `
-                    <div class="card shadow mb-2 p-2 col-lg-12 col-sm-12" style="width: 18rem;">
-                        <div>
+                    <div class="card shadow mb-2 p-2 col-lg-6 col-sm-12" style="width: 18rem;">
+                        <div class="col-12">
                                 <img src="${url}" class="card-img-top">
                             </div>
                         <div class="row">

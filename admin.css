@@ -61,5 +61,6 @@ a {
 }
 
 .third-half {
-    overflow: auto;
+    /* overflow: auto; */
+    background-color: black;
 }
