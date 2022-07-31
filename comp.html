@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="bootstrap-5.2.0-beta1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="admin.css">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet"> -->
+</head>
+
+<body>
+    <header class="sticky-top">
+        <nav class="nav">
+            <div class="ps-5 pt-2">
+                <span id="text-logo" class="fs-1 ms-5">Vmart</span><span class="ms-3"><img
+                        src="images/images__1_-removebg-preview.png" alt="" width="50"></span>
+            </div>
+            <div class="pt-2 ps-5 d-flex">
+                <input type="search" class="form-control ms-5 fs-5" id="nav-input"
+                    placeholder="Search products,brand e.t.c">
+                <button class="btn btn-info ms-2 w-25 text-light fs-3">Search</button>
+            </div>
+            <div class="ps-5 pt-3">
+                <span class="ms-5 fs-2" id="admin">Admin Page</span>
+            </div>
+        </nav>
+    </header>
+    <section class="d-flex">
+        <div class="first-half">
+            <div class="product-container">
+             <p class="fs-3 ms-5 pt-3">Products</p>
+             <ul>
+                <a href="phone.html"><li class="mb-3"><img src="images/phone-portrait-outline.svg" alt="" width="20"> Phones </li></a>
+                <a href="comp.html"><li class="mb-3"><img src="images/desktop-outline.svg" alt="" width="20"> Computing</li></a>
+                <a href=""><li class="mb-3"><img src="images/tv-outline.svg" alt="" width="20"> Electronics</li></a>
+                <a href=""><li class="mb-3"><img src="images/car-sport-outline.svg" alt="" width="20"> Automobile</li></a>
+                <a href=""><li class="mb-3"><img src="images/glasses-outline.svg" alt="" width="20"> Fashion</li></a>
+                <a href=""><li class="mb-3"><img src="images/hardware-chip-outline.svg" alt="" width="20"> Gadgets</li></a>
+                <a href=""><li class="mb-3"><img src="images/game-controller-outline.svg" alt="" width="20"> Gaming</li></a>
+                <a href=""><li class="mb-3"><img src="images/american-football-outline.svg" alt="" width="20"> Sporting Goods</li></a>
+                <a href=""><li class="mb-3"><img src="images/accessibility-outline.svg" alt="" width="20"> Body products</li></a>
+                <a href=""><li class="mb-3"><img src="images/ticket-outline.svg" alt="" width="20"> Other Categories</li></a>
+             </ul>
+             <div>
+                <button class="btn btn-info" id="sign-out">Sign out</button>
+             </div>
+            </div>
+        </div>
+        <div class="second-half">
+            <div>
+                <h3 class="text-dark mt-5">Computers Products</h3>
+            </div>
+                <div class="row mt-5 ">
+                    <div class="col-12 mx-auto shadow p-5 mt-3">
+                        <input type="text" placeholder="product name" class="form-control" id="todoInp">
+                        <input type="text" placeholder="product price" class="form-control" id="todoProduct">
+                        <input type="text" placeholder="price discount" class="form-control" id="todoPrice">
+                        <input type="file" id="fileInput" class="form-control">
+                        <button class="btn btn-info w-100 mt-3" id="todoBtn">Add products</button>
+                        <div id="loader" class="mt-5"></div>
+                        <div id="loading"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="third-half row ms-5 ">
+            <div id="allTodo" class="mt-5 ms-5 col-lg-12 col-sm-12 overflow-auto"></div>
+            
+        </div>
+    </section>
+    <script src="bootstrap-5.2.0-beta1-dist/js/bootstrap.js"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js";
+        import { getStorage, uploadBytes, ref as stRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-storage.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxP_9z3E1eTGIcPx64RB2tgMrKm33a3js",
+            authDomain: "e-commerce-app-b0a1f.firebaseapp.com",
+            databaseURL: "https://e-commerce-app-b0a1f-default-rtdb.firebaseio.com",
+            projectId: "e-commerce-app-b0a1f",
+            storageBucket: "e-commerce-app-b0a1f.appspot.com",
+            messagingSenderId: "492892698719",
+            appId: "1:492892698719:web:ca2eaafe26d664894bc3ea"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const auth = getAuth();
+        const storage = getStorage()
+
+        let userDetails = {}
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userDetails.email = user.email;
+                userDetails.uid = user.uid;
+            } else {
+                window.location = "signin.html"
+            }
+            console.log(userDetails)
+        })
+        let dbRef = ref(db, "computers");
+        let compArray = [];
+        let compId = 0;
+        onValue(dbRef, function (snapshot) {
+            compArray = snapshot.val();
+            if (compArray) {
+                compId = compArray.length;
+                displayTodo(compArray);
+            } else {
+                compId = 0;
+            }
+        })
+
+
+
+
+        document.getElementById("todoBtn").addEventListener("click", function () {
+            let comp = {
+               compName:todoInp.value,
+               compPrice:todoProduct.value,
+               compDiscount:todoPrice.value
+            };
+            let files = fileInput.files[0];
+            let fileName = files.name;
+
+            console.log(files, fileName);
+            let date = new Date();
+            let compObj = { comp, time: date.toLocaleTimeString(), email: userDetails.email, img_name: fileName };
+            let compRef = ref(db, `computers/${compId}`);
+            set(compRef, compObj);
+
+            let imgRef = stRef(storage, `images/${fileName}`);
+            let uploadImage = uploadBytesResumable(imgRef, files);
+            uploadImage.on("state-changed", function (snapshot) {
+                let totalBytes = snapshot.totalBytes;
+                let bytesTransferred = snapshot.bytesTransferred;
+                console.log(totalBytes, bytesTransferred);
+
+                let progress = Math.round((bytesTransferred / totalBytes) * 100);
+                console.log(`${progress}%`);
+                loader.innerHTML = `${progress}%`;
+            }, function (error) {
+                console.log(error);
+            }, function () {
+                loader.innerHTML = "Uploaded!";
+                loader.classList.add("bg-success");
+            })
+
+
+        })
+
+        function displayTodo(compArray) {
+            let userProduct = compArray.filter((each) => each.email == userDetails.email);
+            console.log(userProduct);
+            let todoHTML = "";
+            userProduct.map((compObj, i) => {
+                console.log(compObj.img_name);
+                let imgRef = stRef(storage, `images/${compObj.img_name}`);
+                getDownloadURL(imgRef).then((url) => {
+                    allTodo.innerHTML += `
+                    <div class="card shadow mb-2 p-2 col-lg-6 col-sm-12" style="width: 10rem;">
+                        <div class="col-12">
+                                <img src="${url}" class="card-img-top">
+                            </div>
+                            <div class="card-body">
+                            <h5 class="card-title">${compObj.comp.compName}</h5>
+                            <p class="card-text">$${compObj.comp.compPrice}</p>
+                            <p class="card-text text-danger">${compObj.comp.compDiscount}%</p>
+                            
+                    </div>`
+                    console.log(url)
+                })
+            })
+            console.log(allTodo, "jddjdjdjj");
+            // allTodo.innerHTML = todoHTML;
+        }
+
+        document.getElementById("sign-out").addEventListener("click", function () {
+            signOut(auth).then((response) => {
+                window.location = "signin.html";
+            }).catch((error) => {
+                console.log(response);
+            })
+        })
+    </script>
+</body>
+
+</html>

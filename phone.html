@@ -60,14 +60,15 @@
                         <input type="text" placeholder="price discount" class="form-control" id="todoPrice">
                         <input type="file" id="fileInput" class="form-control">
                         <button class="btn btn-info w-100 mt-3" id="todoBtn">Add products</button>
+                        <div id="loader" class="mt-5"></div>
                         <div id="loading"></div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="third-half row ms-5 ">
-            <div id="allTodo" class="mt-5 ms-5 col-lg-12 col-sm-12"></div>
-            <div id="loader"></div>
+            <div id="allTodo" class="mt-5 ms-5 col-lg-12 col-sm-12 overflow-auto"></div>
+            
         </div>
     </section>
     <script src="bootstrap-5.2.0-beta1-dist/js/bootstrap.js"></script>
@@ -167,14 +168,14 @@
                 let imgRef = stRef(storage, `images/${productObj.img_name}`);
                 getDownloadURL(imgRef).then((url) => {
                     allTodo.innerHTML += `
-                    <div class="card shadow mb-2 p-2 col-lg-12 col-sm-12" style="width: 18rem;">
+                    <div class="card shadow mb-2 p-2 col-lg-6 col-sm-12" style="width: 10rem;">
                         <div class="col-12">
                                 <img src="${url}" class="card-img-top">
                             </div>
                             <div class="card-body">
                             <h5 class="card-title">${productObj.pro.productName}</h5>
-                            <p class="card-text">${productObj.pro.productPrice}</p>
-                            <p class="card-text text-danger">${productObj.pro.productDiscount}</p>
+                            <p class="card-text">$${productObj.pro.productPrice}</p>
+                            <p class="card-text text-danger">${productObj.pro.productDiscount}%</p>
                             
                     </div>`
                     console.log(url)
@@ -186,7 +187,7 @@
 
         document.getElementById("sign-out").addEventListener("click", function () {
             signOut(auth).then((response) => {
-                window.location = "index.html";
+                window.location = "signin.html";
             }).catch((error) => {
                 console.log(response);
             })
