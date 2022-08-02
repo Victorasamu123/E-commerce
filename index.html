@@ -98,17 +98,17 @@
                     </div>
                   </div>
                   <div class="carousel-item" data-bs-interval="2000">
-                    <img src="images/computing/monitor.png" class="d-block w-100" alt="...">
-                    <div class="carousel-caption d-none d-md-block">
-                      <h5>Second slide label</h5>
-                      <p>Some representative placeholder content for the second slide.</p>
+                    <img src="images/89990_1548616187.jpg" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block text-white" id="Thermocool">
+                      <h5>Thermocool Showroom</h5>
+                      <p>Now Available in every vmart stores</p>
                     </div>
                   </div>
                   <div class="carousel-item">
-                    <img src="images/computing/monitor.png" class="d-block w-100" alt="...">
-                    <div class="carousel-caption d-none d-md-block">
-                      <h5>Third slide label</h5>
-                      <p>Some representative placeholder content for the third slide.</p>
+                    <img src="images/woman-black-trousers-purple-blouse-laughs-leaning-stand-with-elegant-clothes-pink-background_197531-17614.webp" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block  text-white">
+                      <h5>Checkout Our Best Female Designer Dress</h5>
+                      <p>Get Free Female Designer Dress for Every customer</p>
                     </div>
                   </div>
                 </div>
@@ -123,10 +123,15 @@
               </div>
         </div>
     </section>
-    <section>
-        <div id="phones">
+    <section class="ms-5 ps-5">
+        <div class="fs-2">Our Phones Product</div>
+        <div id="phones" class="w-100 row ps-3">
 
         </div>
+    </section>
+    <section class="ms-5 ps-5">
+        <div class="fs-2">Our Computer Product</div>
+        <div id="computers" class="w-100 row ps-3">
     </section>
     <script src="bootstrap-5.2.0-beta1-dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
@@ -163,6 +168,7 @@
             } else {
                 productId = 0;
             }
+            
         })
 
 
@@ -202,24 +208,29 @@
 
 
         }
-         window getData = getData;
+         window.getData = getData;
+
         function displayTodo(productArray) {
-            console.log(userProduct);
             let todoHTML = "";
-            userProduct.map((productObj, i) => {
+            productArray.map((productObj, i) => {
                 console.log(productObj.img_name);
                 let imgRef = stRef(storage, `images/${productObj.img_name}`);
                 getDownloadURL(imgRef).then((url) => {
                     phones.innerHTML += `
-                    <div class="card shadow mb-2 p-2 col-lg-6 col-sm-12" style="width: 10rem;">
+                    <div class="card shadow mb-2 p-2 col-lg-4 col-sm-12" style="width: 10rem; he13rem;">
                         <div class="col-12">
-                                <img src="${url}" class="card-img-top">
+                                <img src="${url}" class="card-img-top"style="width: 4rem; height:4rem;">
                             </div>
                             <div class="card-body">
                             <h5 class="card-title">${productObj.pro.productName}</h5>
                             <p class="card-text">$${productObj.pro.productPrice}</p>
                             <p class="card-text text-danger">${productObj.pro.productDiscount}%</p>
-                            
+                            </div>
+                            <div class="card-footer">
+                             <button class="btn btn-info" id>
+                                Add To Cart
+                            </button>
+                            </div>
                     </div>`
                     console.log(url)
                 })
